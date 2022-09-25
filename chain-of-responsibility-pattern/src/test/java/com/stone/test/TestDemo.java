@@ -1,0 +1,41 @@
+package com.stone.test;
+
+import com.stone.log.AbstractLogger;
+import com.stone.log.ConsoleLogger;
+import com.stone.log.ErrorLogger;
+import com.stone.log.FileLogger;
+import org.junit.Test;
+
+public class TestDemo {
+
+    private static AbstractLogger getChainOfLoggers() {
+        AbstractLogger errorLogger = new ErrorLogger(AbstractLogger.ERROR);
+        AbstractLogger fileLogger = new FileLogger(AbstractLogger.DEBUG);
+        AbstractLogger consoleLogger = new ConsoleLogger(AbstractLogger.INFO);
+
+        errorLogger.setNextLogger(fileLogger);
+        fileLogger.setNextLogger(consoleLogger);
+
+        return errorLogger;
+    }
+
+    @Test
+    public void test() {
+        AbstractLogger loggerChain = getChainOfLoggers();
+
+        loggerChain.logMessage(AbstractLogger.INFO,
+                "This is an information.");
+
+        System.out.println("⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆");
+
+        loggerChain.logMessage(AbstractLogger.DEBUG,
+                "This is a debug level information.");
+
+        System.out.println("⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆");
+
+        loggerChain.logMessage(AbstractLogger.ERROR,
+                "This is an error information.");
+
+        System.out.println("⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆ ⬆⬆⬆⬆⬆");
+    }
+}
